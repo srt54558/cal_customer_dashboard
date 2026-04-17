@@ -1,0 +1,37 @@
+# Implementation Progress
+
+## 2026-04-13
+- Step 1: Started productionization work. Verified baseline project structure and existing prototype constraints.
+- Step 2: Added production tooling updates in `package.json` (`typecheck`, `test`, `test:ci`) and removed `ignoreBuildErrors` from Next config.
+- Step 3: Introduced core production domain/env layers:
+  - `lib/models.ts` (zod-validated session/customer/issue/comment models and typed error/source contracts)
+  - `lib/env.ts` (centralized env parsing)
+  - `lib/kv.ts` (Vercel KV adapter + local fallback)
+- Step 4: Replaced prototype Linear integration with production-safe GraphQL client and sanitization in `lib/linear.ts`.
+- Step 5: Implemented normalized KV projection/cache layer and scoped authz data access in `lib/data-store.ts`:
+  - user/customer mapping
+  - customer/issue/comment entities and indexes
+  - stale/corruption detection
+  - read-through fallback and cache repair
+- Step 6: Reworked auth/session handling in `lib/auth.ts`:
+  - removed mock bypass
+  - added OAuth state cookie checks
+  - role resolution via `EMPLOYEE_EMAIL_WHITELIST`
+  - first-login customer mapping for `customer_user`
+- Step 7: Updated auth and API routes:
+  - `/api/auth/login`, `/api/auth/callback/cal`, `/api/auth/logout`
+  - `/api/me`
+  - `/api/linear/customers`
+  - `/api/linear/customers/[customerId]/issues`
+  - `/api/issues/[issueId]/comments`
+- Step 8: Added Linear webhook endpoint `/api/webhooks/linear` with signature + timestamp verification using Linear SDK and dead-letter support.
+- Step 9: Migrated dashboard UX to non-interactive Kanban and role-aware views:
+  - homepage role logic
+  - scoped customer pages
+  - kanban issue columns
+- Step 10: Added issue detail comments timeline + `CommentComposer` for create-comment flow.
+- Step 11: Added CI workflow (`.github/workflows/ci.yml`) and baseline tests (`tests/*.test.ts`, `vitest.config.ts`).
+- Step 12: Added setup/deployment documentation and environment template (`README.md`, `.env.example`).
+- Step 13: Validation pass in progress (lint/typecheck/tests/build) and bugfixes as needed.
+- Step 14: Resolved lint/tooling compatibility for ESLint 9 flat config and stabilized lint script.
+- Step 15: Completed verification run: `npm run lint`, `npm run typecheck`, `npm run test:ci`, `npm run build` all pass.

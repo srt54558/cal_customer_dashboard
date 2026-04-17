@@ -1,0 +1,292 @@
+{
+  "Metadata": {
+    "title": "Customer Portal",
+    "description": "View and track your support tickets"
+  },
+  "CustomerRouteMetadata": {
+    "customerPageTitle": "{customerSlug} - Support Tickets",
+    "customerPageDescription": "View and track your support tickets for {customerSlug}",
+    "issuePageTitle": "{issueId} - Issue Detail",
+    "issuePageDescription": "Track status and updates for {issueId}"
+  },
+  "LoginPage": {
+    "title": "Cal.com Support Portal",
+    "subtitle": "Track your Supporttickets and fulfill addition informations.",
+    "continueWithCal": "Continue with Cal.com",
+    "errors": {
+      "oauthDenied": "Login was cancelled. Please try again.",
+      "authSessionExpired": "Your login session expired. Please start again.",
+      "authNoCode": "Login could not be completed. Please try again.",
+      "authFailed": "We could not sign you in right now. Please try again."
+    }
+  },
+  "AccessDeniedPage": {
+    "title": "Access is currently restricted",
+    "descriptionBlacklisted": "Personal email domains are not eligible for this support portal. Please use your company email address.",
+    "descriptionNoMapping": "We couldn't find an organization mapping for your account yet.",
+    "supportHint": "If you believe this is incorrect, contact support to complete your organization setup.",
+    "logOff": "Log off"
+  },
+  "CustomerForbiddenPage": {
+    "title": "Access denied",
+    "description": "You do not have access to this customer workspace.",
+    "backToHome": "Back to home"
+  },
+  "CustomerNotFoundPage": {
+    "title": "Customer not found",
+    "description": "The customer organization you're looking for doesn't exist or you don't have access to it.",
+    "backToHome": "Back to home"
+  },
+  "IssueNotFoundPage": {
+    "title": "Issue not found",
+    "description": "This issue is missing or you do not have permission to view it.",
+    "backToHome": "Back to home"
+  },
+  "CustomerLoading": {
+    "columns": {
+      "backlog": "Backlog",
+      "unstarted": "Unstarted",
+      "inProgress": "In Progress",
+      "completed": "Completed",
+      "canceled": "Canceled"
+    }
+  },
+  "HomePage": {
+    "convexAuthMissing": "Your app session is active but Convex auth is not.",
+    "signOutAndLoginAgain": "Sign out and log in again",
+    "titleEmployee": "Organizations",
+    "titleCustomer": "Hi, {firstName}",
+    "subtitleEmployee": "Select an organization to manage support tickets.",
+    "subtitleCustomer": "Select your organization to view ongoing updates.",
+    "internalDomain": "Internal",
+    "noOrganizationsTitle": "No organizations",
+    "noOrganizationsEmployee": "No organizations found in your workspace.",
+    "noOrganizationsCustomer": "We couldn't find an organization for your account."
+  },
+  "PortalHeader": {
+    "brand": "Portal",
+    "dashboard": "Dashboard",
+    "roleStaff": "Staff",
+    "roleClient": "Client",
+    "profileSettings": "Profile Settings",
+    "personalWorkspace": "Personal Workspace",
+    "signOut": "Sign out"
+  },
+  "PortalShell": {
+    "brand": "Cal Support",
+    "nav": {
+      "overview": "Overview",
+      "tickets": "My Tickets",
+      "settings": "Settings"
+    },
+    "actions": {
+      "seeding": "Seeding...",
+      "seedDemoData": "Seed Demo Data",
+      "logOff": "Log off",
+      "openNavigation": "Open navigation"
+    },
+    "notifications": {
+      "title": "Recent Activity",
+      "clear": "Clear",
+      "loading": "Loading activity…",
+      "empty": "No recent activity.",
+      "ariaLabel": "Recent activity notifications"
+    },
+    "logoutDialog": {
+      "title": "Log off?",
+      "description": "You will be signed out of this workspace and redirected to login.",
+      "cancel": "Cancel"
+    },
+    "titles": {
+      "overview": {
+        "title": "Overview",
+        "subtitle": "Welcome back. Here's the latest ticket activity."
+      },
+      "tickets": {
+        "title": "My Support Tickets",
+        "subtitle": "Track and view your open requests."
+      },
+      "issueDetail": {
+        "title": "Ticket Detail",
+        "subtitle": "Thread, status, and assignment details."
+      },
+      "settings": {
+        "title": "Settings",
+        "subtitle": "Notification preferences and account controls."
+      },
+      "default": {
+        "title": "SupportDesk",
+        "subtitle": "Customer support workspace."
+      }
+    }
+  },
+  "CustomerPage": {
+    "forbidden": "You do not have access to this customer.",
+    "customerNotFound": "Customer not found.",
+    "loadingCustomer": "Loading customer...",
+    "loadingIssues": "Loading issues...",
+    "convexAuthMissing": "Your app session is active but Convex auth is not.",
+    "signOutAndLoginAgain": "Sign out and log in again"
+  },
+  "IssuesList": {
+    "title": "Kanban Board",
+    "ticketsCount": "{count} tickets",
+    "createTicket": "Create Ticket",
+    "searchPlaceholder": "Search tickets...",
+    "noIssues": "No issues",
+    "columns": {
+      "backlog": "Backlog",
+      "todo": "Todo",
+      "inProgress": "In Progress",
+      "done": "Done"
+    }
+  },
+  "IssuePage": {
+    "issueDataUnavailable": "Issue data unavailable.",
+    "loadingIssue": "Loading issue...",
+    "convexAuthMissing": "Your app session is active but Convex auth is not.",
+    "signOutAndLoginAgain": "Sign out and log in again",
+    "forbidden": "You do not have access to this issue.",
+    "issueNotFound": "Issue not found.",
+    "breadcrumbTickets": "Tickets",
+    "sections": {
+      "description": "Description",
+      "attachments": "Attachments",
+      "activity": "Activity",
+      "details": "Details"
+    },
+    "attachments": {
+      "none": "No attachments.",
+      "open": "Open",
+      "download": "Download"
+    },
+    "noDescription": "No description provided.",
+    "noActivityYet": "No activity yet",
+    "details": {
+      "assignee": "Assignee",
+      "unassigned": "Unassigned",
+      "created": "Created",
+      "lastUpdated": "Last Updated"
+    }
+  },
+  "CommentComposer": {
+    "placeholder": "Write a comment...",
+    "posting": "Posting...",
+    "submit": "Post comment",
+    "attachments": {
+      "add": "Add attachment",
+      "remove": "Remove attachment",
+      "titlePlaceholder": "Attachment title",
+      "urlPlaceholder": "https://example.com/file",
+      "subtitlePlaceholder": "Optional subtitle"
+    },
+    "errors": {
+      "empty": "Comment cannot be empty",
+      "attachmentIncomplete": "Attachment title and URL are both required.",
+      "attachmentInvalidUrl": "Attachment URL must be a valid absolute URL.",
+      "forbidden": "You do not have access to comment on this issue.",
+      "postFailed": "Failed to post comment"
+    }
+  },
+  "CustomerOverview": {
+    "convexAuthMissing": "Your app session is active but Convex auth is not.",
+    "signOutAndLoginAgain": "Sign out and log in again",
+    "forbidden": "You do not have access to this customer.",
+    "customerNotFound": "Customer not found.",
+    "fallbackName": "there",
+    "greeting": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening"
+    },
+    "notifications": {
+      "none": "You have no new notifications in the last 12 hours.",
+      "some": "You have {count} new notifications in the last 12 hours."
+    },
+    "stats": {
+      "totalTickets": {
+        "label": "Total Tickets",
+        "helper": "All time"
+      },
+      "open": {
+        "label": "Open",
+        "helper": "Needs attention"
+      },
+      "inProgress": {
+        "label": "In Progress",
+        "helper": "Being worked on"
+      },
+      "resolved": {
+        "label": "Resolved",
+        "helper": "Closed items"
+      }
+    },
+    "recentTickets": {
+      "title": "Recent Tickets",
+      "empty": "No tickets found for this customer."
+    },
+    "recentActivity": {
+      "title": "Recent Activity",
+      "empty": "No recent activity."
+    },
+    "uptime": {
+      "title": "Cal.com Uptime",
+      "subtitle": "Operational status over the last 30 days.",
+      "openStatusPage": "Open status page",
+      "operational": "All systems operational",
+      "percent": "99.98% uptime",
+      "ariaDegradedDay": "Degraded day",
+      "ariaOperationalDay": "Operational day",
+      "minorIncidents": "1 minor incident in the last 30 days."
+    }
+  },
+  "SettingsPage": {
+    "loading": "Loading settings...",
+    "unauthorized": "Please sign in again to manage your settings.",
+    "forbidden": "You do not have access to this customer.",
+    "notifications": {
+      "title": "Notification Preferences",
+      "subtitle": "Choose which customer updates should trigger email notifications.",
+      "emailNotifications": {
+        "title": "Email notifications",
+        "description": "Master switch for all customer update emails."
+      },
+      "ticketUpdates": {
+        "title": "Ticket updates",
+        "description": "Status, assignment, priority, title, and description changes."
+      },
+      "supportComments": {
+        "title": "New support comments",
+        "description": "Receive an email when support comments on a ticket."
+      },
+      "weeklyDigest": {
+        "title": "Weekly digest",
+        "description": "Reserve this setting for weekly summary emails."
+      }
+    },
+    "profile": {
+      "title": "Manage Profile",
+      "subtitle": "Use Cal.com account settings to edit your profile details.",
+      "calSettingsTitle": "Cal.com Profile Settings",
+      "calSettingsDescription": "Open your Cal.com profile settings in a new tab.",
+      "openProfileSettings": "Open profile settings"
+    },
+    "appearance": {
+      "title": "Appearance",
+      "subtitle": "Choose how the portal is rendered for your account.",
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "danger": {
+      "title": "Danger Zone",
+      "deleteAccountTitle": "Delete Account",
+      "deleteAccountDescription": "Deletes only Convex data. Linear data is never deleted.",
+      "deleteAccountButton": "Delete account",
+      "dialogTitle": "Delete this account?",
+      "dialogDescription": "Your account mapping and preferences will be removed from Convex. If no other account exists on your email domain, this organization's Convex projection data will also be removed.",
+      "cancel": "Cancel",
+      "deleting": "Deleting..."
+    }
+  }
+}

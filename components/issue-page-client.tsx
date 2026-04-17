@@ -1,7 +1,7 @@
 "use client"
 
 import type { ComponentType, ReactNode } from "react"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import { useAction, useQuery } from "convex/react"
 import { useTranslations } from "next-intl"
@@ -27,6 +27,8 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { CommentComposer } from "@/components/comment-composer"
+import { Separator } from "@/components/ui/separator"
+import { Skeleton } from "@/components/ui/skeleton"
 import { getSessionQuerySnapshot, setSessionQuerySnapshot } from "@/lib/session-query-cache"
 import type { Comment, Issue } from "@/lib/models"
 
@@ -42,7 +44,7 @@ const REACTION_ALIAS_TO_EMOJI: Record<string, string> = {
   rocket: "🚀",
 }
 
-type IssuePageResult = {
+export type IssuePageResult = {
   issue: Issue | null
   comments: Comment[]
   source: "convex" | "linear_fallback"
@@ -72,28 +74,76 @@ export function IssuePageClient({
 }
 
 function IssuePageWithConvex({ customerSlug, issueId }: { customerSlug: string; issueId: string }) {
-  const t = useTranslations("IssuePage")
   const result = useQuery(api.portal.getIssueByIdentifierScoped, { identifier: issueId })
   const cacheKey = `issue:${issueId}`
+  if (result !== undefined) {
+    setSessionQuerySnapshot(cacheKey, result)
+  }
   const cachedResult = getSessionQuerySnapshot<typeof result>(cacheKey)
   const currentResult = result ?? cachedResult
 
-  useEffect(() => {
-    if (result !== undefined) {
-      setSessionQuerySnapshot(cacheKey, result)
-    }
-  }, [cacheKey, result])
-
   if (!currentResult) {
-    return <div className="p-4 text-sm text-muted-foreground">{t("loadingIssue")}</div>
+    return <IssuePageSkeleton />
   }
 
   return <IssuePageContent customerSlug={customerSlug} result={currentResult as IssuePageResult} />
 }
 
-function IssuePageContent({ customerSlug, result }: { customerSlug: string; result: IssuePageResult }) {
+export function IssuePageSkeleton() {
+  return (
+    <div className="flex flex-col gap-6 max-w-4xl">
+      <Skeleton className="h-9 w-36" />
+      <div className="flex flex-col gap-4">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex flex-col gap-2 w-full">
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-4 w-16" />
+              <Skeleton className="h-6 w-24 rounded-full" />
+            </div>
+            <Skeleton className="h-8 w-3/4" />
+          </div>
+          <Skeleton className="h-8 w-32" />
+        </div>
+        <div className="flex flex-wrap items-center gap-4">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-4 w-36" />
+        </div>
+      </div>
+      <Separator />
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2 flex flex-col gap-6">
+          <Card>
+            <div className="p-6 space-y-2">
+              <Skeleton className="h-6 w-32" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-11/12" />
+            </div>
+          </Card>
+          <Card>
+            <div className="p-6 space-y-4">
+              <Skeleton className="h-6 w-28" />
+              <Skeleton className="h-28 w-full" />
+            </div>
+          </Card>
+        </div>
+        <div className="flex flex-col gap-4">
+          <Card>
+            <div className="p-5 space-y-3">
+              <Skeleton className="h-5 w-20" />
+              <Skeleton className="h-8 w-36" />
+            </div>
+          </Card>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export function IssuePageContent({ customerSlug, result }: { customerSlug: string; result: IssuePageResult }) {
   const t = useTranslations("IssuePage")
   const reactToEntity = useAction(api.comments.reactScoped)
+  const titleRef = useRef<HTMLHeadingElement | null>(null)
 
   if (result.errorCode === "UNAUTHORIZED") {
     return (
@@ -129,6 +179,40 @@ function IssuePageContent({ customerSlug, result }: { customerSlug: string; resu
     }).catch(console.error)
   }
 
+  useEffect(() => {
+    const titleNode = titleRef.current
+    if (!titleNode || typeof window === "undefined") {
+      return
+    }
+
+    const publishTitleVisibility = (visible: boolean) => {
+      window.dispatchEvent(
+        new CustomEvent("portal:issue-title-visibility", {
+          detail: { visible },
+        })
+      )
+    }
+
+    publishTitleVisibility(true)
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0]
+        publishTitleVisibility(Boolean(entry?.isIntersecting))
+      },
+      {
+        threshold: 0.01,
+        rootMargin: "-72px 0px 0px 0px",
+      }
+    )
+
+    observer.observe(titleNode)
+    return () => {
+      observer.disconnect()
+      publishTitleVisibility(true)
+    }
+  }, [issue.identifier])
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-muted-foreground mb-2">
@@ -143,7 +227,7 @@ function IssuePageContent({ customerSlug, result }: { customerSlug: string; resu
       <div className="flex flex-col gap-6">
         <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
           <div className="flex flex-col gap-4 max-w-3xl min-w-0">
-            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground leading-tight font-heading">{issue.title}</h1>
+            <h1 ref={titleRef} className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground leading-tight font-heading">{issue.title}</h1>
             <div className="flex flex-wrap items-center gap-2">
               <Badge variant={statusInfo.variant} className="font-bold uppercase tracking-wider gap-2 px-2.5 py-1">
                 <statusInfo.icon className="h-3 w-3" />

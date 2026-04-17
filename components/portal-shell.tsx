@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import { useMutation, useQuery } from "convex/react"
 import { useTranslations } from "next-intl"
 import {
+  ArrowLeft,
   Bell,
   ClipboardList,
   Home,
@@ -72,6 +73,8 @@ export function PortalShell({ children, user, customer }: PortalShellProps) {
   const t = useTranslations("PortalShell")
   const pathname = usePathname()
   const router = useRouter()
+  const [showIssueBackButton, setShowIssueBackButton] = useState(false)
+  const isIssueRoute = pathname.startsWith(`/${customer.slug}/issues/`)
 
   const shellTitle = getShellTitle(pathname, customer.slug, t)
 
@@ -81,6 +84,31 @@ export function PortalShell({ children, user, customer }: PortalShellProps) {
       router.prefetch(route)
     }
   }, [customer.slug, router])
+
+  useEffect(() => {
+    if (!isIssueRoute) {
+      setShowIssueBackButton(false)
+      return
+    }
+
+    const onIssueTitleVisibility = (event: Event) => {
+      const customEvent = event as CustomEvent<{ visible?: boolean }>
+      setShowIssueBackButton(customEvent.detail?.visible === false)
+    }
+
+    window.addEventListener("portal:issue-title-visibility", onIssueTitleVisibility as EventListener)
+    return () => {
+      window.removeEventListener("portal:issue-title-visibility", onIssueTitleVisibility as EventListener)
+    }
+  }, [isIssueRoute])
+
+  const handleIssueBack = () => {
+    if (window.history.length > 1) {
+      router.back()
+      return
+    }
+    router.push(`/${customer.slug}`)
+  }
 
   return (
     <div className="min-h-screen bg-muted/40">
@@ -193,9 +221,31 @@ export function PortalShell({ children, user, customer }: PortalShellProps) {
                   </SheetContent>
                 </Sheet>
 
-                <div className="min-w-0">
-                  <div className="truncate text-sm font-semibold text-foreground font-heading">{shellTitle.title}</div>
-                  <div className="hidden truncate text-xs text-muted-foreground sm:block">{shellTitle.subtitle}</div>
+                <div className="relative min-w-0">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Go back"
+                    onClick={handleIssueBack}
+                    className={cn(
+                      "absolute left-0 top-0 z-10 h-7 w-7 rounded-md transition-all duration-300 ease-out",
+                      isIssueRoute && showIssueBackButton
+                        ? "translate-x-0 opacity-100"
+                        : "-translate-x-2 opacity-0 pointer-events-none"
+                    )}
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                  </Button>
+                  <div
+                    className={cn(
+                      "min-w-0 transition-all duration-300 ease-out",
+                      isIssueRoute && showIssueBackButton ? "translate-x-8" : "translate-x-0"
+                    )}
+                  >
+                    <div className="truncate text-sm font-semibold text-foreground font-heading">{shellTitle.title}</div>
+                    <div className="hidden truncate text-xs text-muted-foreground sm:block">{shellTitle.subtitle}</div>
+                  </div>
                 </div>
               </div>
 

@@ -1,7 +1,6 @@
 "use client"
 
 import { useMemo } from "react"
-import { usePathname } from "next/navigation"
 import { ConvexProviderWithAuth, ConvexReactClient } from "convex/react"
 
 type AuthState = {
@@ -40,13 +39,10 @@ function readCachedToken(now: number): string | null {
 }
 
 function useTokenBridgeAuth(): AuthState {
-  const pathname = usePathname()
-  const shouldAttemptAuth = pathname !== "/login"
-
   return useMemo(
     () => ({
       isLoading: false,
-      isAuthenticated: shouldAttemptAuth,
+      isAuthenticated: true,
       fetchAccessToken: async ({ forceRefreshToken }) => {
         const now = Date.now()
         if (!forceRefreshToken) {
@@ -84,7 +80,7 @@ function useTokenBridgeAuth(): AuthState {
         }
       }
     }),
-    [shouldAttemptAuth]
+    []
   )
 }
 

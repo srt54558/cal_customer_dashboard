@@ -8,6 +8,7 @@ import { useQuery } from "convex/react"
 import { useTranslations } from "next-intl"
 import { api } from "../convex/_generated/api"
 import { Card } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 import type { Customer } from "@/lib/models"
 
 const HAS_CONVEX = Boolean(process.env.NEXT_PUBLIC_CONVEX_URL)
@@ -37,6 +38,10 @@ function HomePageWithConvex({ role, firstName }: { role: "employee" | "customer_
   const result = useQuery(api.portal.listCustomersScoped, {})
   const errorCode = (result as { errorCode?: string } | undefined)?.errorCode
 
+  if (!result) {
+    return <HomePageSkeleton />
+  }
+
   if (errorCode === "UNAUTHORIZED") {
     return (
       <main className="flex-1 container py-12">
@@ -53,6 +58,31 @@ function HomePageWithConvex({ role, firstName }: { role: "employee" | "customer_
   const customers = (result?.customers ?? []) as CustomerLite[]
 
   return <HomePageContent role={role} firstName={firstName} customers={customers} />
+}
+
+function HomePageSkeleton() {
+  return (
+    <main className="flex-1 container py-12">
+      <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-2">
+          <Skeleton className="h-10 w-72" />
+          <Skeleton className="h-5 w-[32rem] max-w-full" />
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <Card key={`home-skeleton-${index}`} className="flex items-center gap-4 p-5">
+              <Skeleton className="h-12 w-12 rounded" />
+              <div className="min-w-0 flex-1 space-y-2">
+                <Skeleton className="h-5 w-40" />
+                <Skeleton className="h-4 w-24" />
+              </div>
+              <Skeleton className="h-5 w-5 rounded-full" />
+            </Card>
+          ))}
+        </div>
+      </div>
+    </main>
+  )
 }
 
 function HomePageContent({

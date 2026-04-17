@@ -9,7 +9,7 @@ import { useTheme } from "next-themes"
 import { api } from "@/convex/_generated/api"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Frame, FrameDescription, FramePanel, FrameTitle } from "@/components/ui/frame"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Switch } from "@/components/ui/switch"
 import { getSessionQuerySnapshot, setSessionQuerySnapshot } from "@/lib/session-query-cache"
 import {
@@ -29,6 +29,9 @@ export function SettingsPageClient({ customerSlug }: { customerSlug: string }) {
   const t = useTranslations("SettingsPage")
   const settingsResult = useQuery(api.account.getSettingsByCustomerSlugScoped, { slug: customerSlug })
   const cacheKey = `settings:${customerSlug}`
+  if (settingsResult !== undefined) {
+    setSessionQuerySnapshot(cacheKey, settingsResult)
+  }
   const cachedResult = getSessionQuerySnapshot<typeof settingsResult>(cacheKey)
   const currentResult = settingsResult ?? cachedResult
   const customerId = currentResult?.customer?.id
@@ -59,18 +62,8 @@ export function SettingsPageClient({ customerSlug }: { customerSlug: string }) {
     setTheme(theme)
   }, [setTheme, currentResult?.appearance?.theme])
 
-  useEffect(() => {
-    if (settingsResult !== undefined) {
-      setSessionQuerySnapshot(cacheKey, settingsResult)
-    }
-  }, [cacheKey, settingsResult])
-
   if (!currentResult) {
-    return (
-      <div className="mx-auto w-full max-w-4xl text-sm text-muted-foreground">
-        {t("loading")}
-      </div>
-    )
+    return <SettingsPageSkeleton />
   }
 
   if (currentResult.errorCode === "UNAUTHORIZED") {
@@ -163,34 +156,32 @@ export function SettingsPageClient({ customerSlug }: { customerSlug: string }) {
         </div>
       </Card>
 
-      <Frame>
-        <FramePanel className="p-5">
-          <div className="mb-4">
-            <FrameTitle className="text-sm text-foreground font-heading">{t("profile.title")}</FrameTitle>
-            <FrameDescription className="text-xs">{t("profile.subtitle")}</FrameDescription>
+      <Card className="p-5">
+        <div className="mb-4">
+          <div className="text-sm font-semibold text-foreground font-heading">{t("profile.title")}</div>
+          <div className="text-xs text-muted-foreground">{t("profile.subtitle")}</div>
+        </div>
+        <div className="flex flex-col gap-3 rounded-md border border-border p-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <div className="text-sm font-medium text-foreground font-heading">{t("profile.calSettingsTitle")}</div>
+            <div className="text-xs text-muted-foreground">{t("profile.calSettingsDescription")}</div>
           </div>
-          <div className="flex flex-col gap-3 rounded-md border border-border p-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <div className="text-sm font-medium text-foreground font-heading">{t("profile.calSettingsTitle")}</div>
-              <div className="text-xs text-muted-foreground">{t("profile.calSettingsDescription")}</div>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              render={
-                <Link
-                  href="https://app.cal.com/settings/my-account/profile"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                />
-              }
-            >
-              <ExternalLink className="h-3.5 w-3.5" />
-              {t("profile.openProfileSettings")}
-            </Button>
-          </div>
-        </FramePanel>
-      </Frame>
+          <Button
+            variant="outline"
+            size="sm"
+            render={
+              <Link
+                href="https://app.cal.com/settings/my-account/profile"
+                target="_blank"
+                rel="noopener noreferrer"
+              />
+            }
+          >
+            <ExternalLink className="h-3.5 w-3.5" />
+            {t("profile.openProfileSettings")}
+          </Button>
+        </div>
+      </Card>
 
       <Card className="p-5">
         <div className="mb-4">
@@ -249,6 +240,28 @@ export function SettingsPageClient({ customerSlug }: { customerSlug: string }) {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+        </div>
+      </Card>
+    </div>
+  )
+}
+
+export function SettingsPageSkeleton() {
+  return (
+    <div className="mx-auto flex w-full max-w-4xl flex-col gap-5">
+      <Card className="p-5 space-y-4">
+        <Skeleton className="h-5 w-56" />
+        <Skeleton className="h-4 w-80" />
+        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-10 w-full" />
+      </Card>
+      <Card className="p-5 space-y-4">
+        <Skeleton className="h-5 w-48" />
+        <Skeleton className="h-4 w-72" />
+        <div className="rounded-md border border-border p-3 space-y-3">
+          <Skeleton className="h-4 w-60" />
+          <Skeleton className="h-4 w-72" />
+          <Skeleton className="h-9 w-44" />
         </div>
       </Card>
     </div>

@@ -47,7 +47,7 @@ Create `.env.local` from `.env.example`.
 - `LINEAR_API_KEY`
   - Create from Linear API settings (personal key/integration key).
 - `LINEAR_WEBHOOK_SECRET`
-  - Generate a strong random secret and set the same value in Linear webhook config.
+  - Copy the secret from linear into this env var.
 - `CONVEX_INTERNAL_SECRET`
   - Generate a strong random secret for trusted internal projection writes.
 - `CONVEX_AUTH_ISSUER`
@@ -55,9 +55,9 @@ Create `.env.local` from `.env.example`.
 - `CONVEX_AUTH_AUDIENCE`
   - JWT audience identifier used by this portal.
 - `CONVEX_JWT_PRIVATE_KEY`
-  - Private key used to mint Convex bridge JWTs.
+  - Private key used to mint Convex bridge JWTs. Generate one.
 - `CONVEX_JWT_PUBLIC_KEY`
-  - Public key pair for Convex JWT verification.
+  - Public key pair for Convex JWT verification. Generate one. 
 - `CONVEX_JWT_KID`
   - Key ID for the JWT key pair (must match issuer/verifier config).
 

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useQuery } from "convex/react";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useTheme } from "next-themes";
 import { Clock3, MessageSquare, Ticket, TriangleAlert } from "lucide-react";
 import type { ElementType } from "react";
@@ -20,7 +20,7 @@ import type { ApiErrorCode, Comment, Customer, Issue } from "@/lib/models";
 
 const HAS_CONVEX = Boolean(process.env.NEXT_PUBLIC_CONVEX_URL);
 
-type OverviewInitialData = {
+export type OverviewInitialData = {
   customer: Customer | null;
   issues: Issue[];
   commentsByIssueId: Record<string, Comment[]>;
@@ -78,14 +78,14 @@ function CustomerOverviewWithConvex({
     activityLimit: 5,
   });
   const cacheKey = `overview:${customerSlug}`;
+  if (customerResult !== undefined) {
+    setSessionQuerySnapshot(cacheKey, {
+      ...customerResult,
+      __firstName: firstName,
+    });
+  }
   const cachedResult = getSessionQuerySnapshot<typeof customerResult>(cacheKey);
   const currentResult = customerResult ?? cachedResult;
-
-  useEffect(() => {
-    if (customerResult !== undefined) {
-      setSessionQuerySnapshot(cacheKey, customerResult);
-    }
-  }, [cacheKey, customerResult]);
 
   if (!currentResult) {
     return <OverviewSkeleton />;
@@ -119,7 +119,7 @@ function CustomerOverviewWithConvex({
   );
 }
 
-function OverviewContent({
+export function OverviewContent({
   customerSlug,
   firstName,
   data,
@@ -299,9 +299,6 @@ function OverviewContent({
       </div>
 
       <Card className="overflow-hidden rounded-xl bg-background p-0">
-        <div className="flex h-12 items-center px-4 text-sm font-semibold text-foreground font-heading">
-          {t("uptime.title")}
-        </div>
         <iframe
           title={t("uptime.title")}
           src={iframeSrc}
@@ -315,7 +312,7 @@ function OverviewContent({
   );
 }
 
-function OverviewSkeleton() {
+export function OverviewSkeleton() {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-col gap-2">

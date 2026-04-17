@@ -294,7 +294,7 @@ export function IssuePageContent({ customerSlug, result }: { customerSlug: strin
                         key={comment.id} 
                         issueIdentifier={issue.identifier} 
                         comment={comment} 
-                        onReact={(emoji) => onReact(emoji, comment.id)}
+                        onReact={onReact}
                       />
                     ))
                   ) : (
@@ -431,7 +431,7 @@ function ThreadedComment({
 }: {
   comment: ThreadedCommentNode
   issueIdentifier: string
-  onReact: (emoji: string) => void
+  onReact: (emoji: string, commentId?: string) => void
 }) {
   const isStatusChange = isStatusChangeComment(comment)
   const parsedBody = parseCommentBody(comment.body)
@@ -521,7 +521,7 @@ function ThreadedComment({
               ) : (
                 <div />
               )}
-              {HAS_CONVEX ? <ReactionPickerWithAction targetKey={comment.id} onReact={onReact} /> : null}
+              {HAS_CONVEX ? <ReactionPickerWithAction targetKey={comment.id} onReact={(emoji) => onReact(emoji, comment.id)} /> : null}
             </div>
           </div>
         </div>
